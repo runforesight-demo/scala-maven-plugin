@@ -27,7 +27,6 @@ jobs:
 
       - name: Install XMLStartLet
         run: sudo apt install xmlstarlet
-
       - name: Add jacoco plugin to POM
         run: |
           echo "$(xmlstarlet edit --omit-decl -N x="http://maven.apache.org/POM/4.0.0" \
