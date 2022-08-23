@@ -1,46 +1,18 @@
-# Scala Maven Plugin
-[![ci](https://github.com/davidB/scala-maven-plugin/actions/workflows/ci.yaml/badge.svg)](https://github.com/davidB/scala-maven-plugin/actions/workflows/ci.yaml)
-[![Code Quality: Java](https://img.shields.io/lgtm/grade/java/g/davidB/scala-maven-plugin.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/davidB/scala-maven-plugin/context:java)
-[![Total Alerts](https://img.shields.io/lgtm/alerts/g/davidB/scala-maven-plugin.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/davidB/scala-maven-plugin/alerts)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/net.alchim31.maven/scala-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/net.alchim31.maven/scala-maven-plugin)
+## runforesight.com Demo Projects - Maven Git Versioning Extension
 
-The **scala-maven-plugin** (previously maven-scala-plugin) is used for compiling/testing/running/documenting Scala code in Maven.
+<a href="https://foresight.thundra.live/repositories/github/runforesight-demo/scala-maven-plugin/workflow-runs">
+  <img src="https://4750167.fs1.hubspotusercontent-na1.net/hubfs/4750167/foresight-live-badge-72.png" height="36" alt="see it on foresight" />
+</a>
 
-* [Documentation](https://davidb.github.io/scala-maven-plugin/index.html)
-* [Wiki](https://github.com/davidB/scala-maven-plugin/wiki)
-* [Issues](https://github.com/davidB/scala-maven-plugin/issues/)
+---
+![Success Details](http://foresight.service.thundra.us/public/api/v1/badge/success?repoId=f1d2d8f5-4fbc-4c42-b0da-49272ba1b833)
+![Test Result](http://foresight.service.thundra.us/public/api/v1/badge/test?repoId=f1d2d8f5-4fbc-4c42-b0da-49272ba1b833)
+![Utilization](http://foresight.service.thundra.us/public/api/v1/badge/utilization?repoId=f1d2d8f5-4fbc-4c42-b0da-49272ba1b833)
 
-## Similar plugins
 
-* [scalor-maven-plugin](https://github.com/random-maven/scalor-maven-plugin)
-* [sbt-compiler-maven-plugin](https://github.com/sbt-compiler-maven-plugin/sbt-compiler-maven-plugin)
-* [sbt-delegate-maven-plugin](https://github.com/AugustNagro/sbt-delegate-maven-plugin)
-
-## Build
-
-Currently, you need Maven 3.x & JDK 8 to build the plugin, create the site, and run `integration-test`.
-
-## Commands
-
-* `./mvnw package` : generate jar
-* `./mvnw site` : generate the plugin website
-* `./mvnw integration-test` : `./mvnw package` + run all integration test
-  * note: to run `test_scalaHome`: you have to set `scala.home` property in `src/it/test_scalaHome/pom.xml` to correspond to your environment.  See Build section above for a simple setup.
-* `./mvnw integration-test -Dinvoker.test=test1` : run integration test 'test1' (against all configuration) useful for tuning/debug
-* `./mvnw install` :  ./mvnw integration-test` + publish on local maven repository
-* `./mvnw install -Dmaven.test.skip=true` : ./mvnw install` without run of unit test and run of integration test
-* release :
-  * `gpg --use-agent --armor --detach-sign --output $(mktemp) pom.xml` to avoid issue on macosx with gpg signature see [[MGPG-59] GPG Plugin: "gpg: signing failed: Inappropriate ioctl for device" - ASF JIRA](https://issues.apache.org/jira/browse/MGPG-59)
-  * `./mvnw release:clean && ./mvnw release:prepare && ./mvnw release:perform` : to publish on staging repository via plugin
-  * `./mvnw release:clean && ./mvnw release:prepare -Darguments="-DskipTests -Dmaven.test.skip=true" && ./mvnw release:perform -Darguments="-DskipTests -Dmaven.test.skip=true"` to publish without tests (integration test require 30min on CI)
-  * `./mvnw site package source:jar javadoc:jar install:install gpg:sign deploy:deploy changes:announcement-generate -Dmaven.test.skip=true -DperformRelease=true` : manual
-  * connect to http://oss.sonatype.org/ close and release the request(about scala-maven-plugin) in staging repositories
-  * browse the updated [mvnsite](https://davidb.github.io/scala-maven-plugin/) (check version into samples, ...)
-
-## TODO
-
-* close issues from https://github.com/davidB/scala-maven-plugin/issues/
-* refactor :
-  * reduce copy-paste
-  * file path management can be improved (a lot)
-  * clean the code
+| Report Attribute  | Value   | 
+|---|---|
+| Language  | Java |
+| Test Framework  | Junit |
+| Test Report Format | JUnit |
+| Coverage Format | Jacoco / XML  |
