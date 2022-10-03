@@ -5,6 +5,9 @@
 package util;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Locale;
 import org.apache.maven.toolchain.Toolchain;
 
 /**
@@ -14,26 +17,59 @@ import org.apache.maven.toolchain.Toolchain;
  */
 public class JavaLocator {
 
+  private static final boolean IS_WINDOWS =
+      System.getProperty("os.name").toLowerCase(Locale.ROOT).startsWith("windows");
+
+  // inspired from org.codehaus.plexus.compiler.javac.JavacCompiler#getJavacExecutable
   public static String findExecutableFromToolchain(Toolchain toolchain) {
-    String javaExec = null;
 
     if (toolchain != null) {
-      javaExec = toolchain.findTool("java");
+      String fromToolChain = toolchain.findTool("java");
+      if (fromToolChain != null) {
+        return fromToolChain;
+      }
     }
 
-    if (javaExec == null) {
-      String javaHome = System.getenv("JAVA_HOME");
-      if (javaHome == null) {
-        javaHome = System.getProperty("java.home"); // fallback to JRE
+    String javaCommand = "java" + (IS_WINDOWS ? ".exe" : "");
+
+    String javaHomeSystemProperty = System.getProperty("java.home");
+    if (javaHomeSystemProperty != null) {
+      Path javaHomePath = Paths.get(javaHomeSystemProperty);
+
+      if (javaHomePath.endsWith("jre")) {
+        // Old JDK versions contain a JRE. We might be pointing to that.
+        // We want to try to use the JDK instead as we need javac in order to compile mixed
+        // Java-Scala projects.
+        Path javaExecPath = javaHomePath.resolveSibling("bin").resolve(javaCommand);
+        if (javaExecPath.toFile().isFile()) {
+          return javaExecPath.toString();
+        }
       }
-      if (javaHome == null) {
+
+      // old standalone JRE or modern JDK
+      Path javaExecPath = javaHomePath.resolve("bin").resolve(javaCommand);
+      if (javaExecPath.toFile().isFile()) {
+        return javaExecPath.toString();
+      } else {
         throw new IllegalStateException(
-            "Couldn't locate java, try setting JAVA_HOME environment variable.");
+            "Couldn't locate java in defined java.home system property.");
       }
-      javaExec = javaHome + File.separator + "bin" + File.separator + "java";
     }
 
-    return javaExec;
+    // fallback: try to resolve from JAVA_HOME
+    String javaHomeEnvVar = System.getenv("JAVA_HOME");
+    if (javaHomeEnvVar == null) {
+      throw new IllegalStateException(
+          "Couldn't locate java, try setting JAVA_HOME environment variable.");
+    }
+
+    Path javaExecPath = Paths.get(javaHomeEnvVar).resolve("bin").resolve(javaCommand);
+    if (javaExecPath.toFile().isFile()) {
+      return javaExecPath.toString();
+    } else {
+      throw new IllegalStateException(
+          "Couldn't locate java in defined JAVA_HOME environment variable.");
+    }
   }
 
   public static File findHomeFromToolchain(Toolchain toolchain) {
